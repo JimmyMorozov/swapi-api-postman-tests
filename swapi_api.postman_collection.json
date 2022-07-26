@@ -1,0 +1,237 @@
+{
+	"info": {
+		"_postman_id": "7011a364-5251-4606-859e-4602fb26876f",
+		"name": "swapi api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21573315"
+	},
+	"item": [
+		{
+			"name": "swapi.dev/api",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//1. Correct response format JSON",
+							"pm.test(\"Correct response format JSON\", function(){",
+							"    pm.response.to.have.jsonBody()",
+							"});",
+							"//2. We have all declared fields",
+							"pm.test(\"Check fields\", function(){",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"people\");",
+							"    pm.expect(jsonData).to.have.property(\"planets\");",
+							"    pm.expect(jsonData).to.have.property(\"films\");",
+							"    pm.expect(jsonData).to.have.property(\"species\");",
+							"    pm.expect(jsonData).to.have.property(\"vehicles\");",
+							"    pm.expect(jsonData).to.have.property(\"starships\");",
+							"});",
+							"//3. Fields value is not NULL",
+							"pm.test(\"Check fields for NULL\", function(){",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.people).not.equal(null);",
+							"    pm.expect(jsonData.planets).not.equal(null);",
+							"    pm.expect(jsonData.films).not.equal(null);",
+							"    pm.expect(jsonData.species).not.equal(null);",
+							"    pm.expect(jsonData.vehicles).not.equal(null);",
+							"    pm.expect(jsonData.starships).not.equal(null);",
+							"});",
+							"//4. Fields value is not empty",
+							"pm.test(\"Check fields for empty\", function(){",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.people).not.equal(\"\");",
+							"    pm.expect(jsonData.planets).not.equal(\"\");",
+							"    pm.expect(jsonData.films).not.equal(\"\");",
+							"    pm.expect(jsonData.species).not.equal(\"\");",
+							"    pm.expect(jsonData.vehicles).not.equal(\"\");",
+							"    pm.expect(jsonData.starships).not.equal(\"\");",
+							"});",
+							"//5. Fields contain specific value",
+							"pm.test(\"Check fields for species value\", function(){",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.people).to.equal(\"https://swapi.dev/api/people/\");",
+							"    pm.expect(jsonData.planets).to.equal(\"https://swapi.dev/api/planets/\");",
+							"    pm.expect(jsonData.films).to.equal(\"https://swapi.dev/api/films/\");",
+							"    pm.expect(jsonData.species).to.equal(\"https://swapi.dev/api/species/\");",
+							"    pm.expect(jsonData.vehicles).to.equal(\"https://swapi.dev/api/vehicles/\");",
+							"    pm.expect(jsonData.starships).to.equal(\"https://swapi.dev/api/starships/\");",
+							"});",
+							"//6. Status code is 200",
+							"pm.test(\"Check that status code is 200\", function(){",
+							"    pm.response.to.have.status(200); ",
+							"});",
+							"//7. Ststus message is ok",
+							"pm.test(\"Check that status message is ok\", function(){",
+							"    pm.response.to.have.status(\"OK\");",
+							"});",
+							"//8. Responce time is less than 1000ms",
+							"pm.test(\"Chek that pesponce time less than 1000ms\", function(){",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"//9. There is \"Content-Type\" in header",
+							"pm.test(\"Check header for Content-Type\", function(){",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"//10. Content-Type is application/json",
+							"pm.test(\"Check that Content-Type is application/json\", function(){",
+							"    pm.response.to.be.header(\"Content-Type\", \"application/json\");",
+							"});",
+							"//11. Cookie exist",
+							"pm.test(\"Cookie exist\", function(){",
+							"    pm.cookies.has(\"\");",
+							"});",
+							"//12. Cookie value",
+							"pm.test(\"Cookie value\", function(){",
+							"    try{",
+							"        var myCookie = pm.cookies.get(\"\");",
+							"        console.log(myCookie);",
+							"    }catch(e) {",
+							"        console.log(\"my cookie is \" + e);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://swapi.dev/api",
+					"protocol": "https",
+					"host": [
+						"swapi",
+						"dev"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "swapi.dev/api JSON",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"var schema = {",
+							"    // specify the type of object",
+							"    \"type\": \"object\",",
+							"    // specify required properties ",
+							"    \"required\": [\"people\", \"planets\", \"films\", \"species\", \"vehicles\", \"starships\"],",
+							"    // describe the properties",
+							"    \"properties\": {",
+							"        \"people\": {\"type\":\"string\"},",
+							"        \"planets\": {\"type\":\"string\"},",
+							"        \"films\": {\"type\":\"string\"},",
+							"        \"species\": {\"type\":\"string\"},",
+							"        \"vehicles\": {\"type\":\"string\"},",
+							"        \"starships\": {\"type\":\"string\"},",
+							"    }",
+							"};",
+							"pm.test('Body is correct', function() {",
+							"    // tv4 - JSON Schema processing libtary, metod - validate",
+							"    pm.expect(tv4.validate(data, schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://swapi.dev/api",
+					"protocol": "https",
+					"host": [
+						"swapi",
+						"dev"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "swapi.dev/api/people/1 JSON",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"",
+							"var schema = {",
+							"    \"type\": \"object\",",
+							"    \"required\": [\"name\", \"height\", \"mass\", \"hair_color\", \"skin_color\", \"eye_color\", \"birth_year\", \"gender\", \"homeworld\", \"films\", \"species\", \"vehicles\", \"starships\",\"created\", \"edited\", \"url\"],",
+							"    \"property\": {",
+							"        \"name\": {\"type\": \"string\"},",
+							"        \"height\": {\"tupe\": \"int\"},",
+							"        \"mass\": {\"tupe\": \"int\"},",
+							"        \"hair_color\": {\"type\": \"string\"},",
+							"        \"skin_color\": {\"type\": \"string\"},",
+							"        \"eye_color\": {\"type\": \"string\"},",
+							"        \"birth_year\": {\"type\": \"string\"},",
+							"        \"gender\": {\"type\": \"string\"},",
+							"        \"homeworld\": {\"type\": \"string\"},",
+							"        \"films\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {\"type\": \"string\"}",
+							"        },",
+							"        \"species\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {\"type\": \"string\"}",
+							"        },",
+							"        \"vehicles\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {\"type\": \"string\"}",
+							"        },",
+							"        \"starships\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {\"type\": \"string\"}",
+							"        },",
+							"        \"created\": {\"type\": \"string\"},",
+							"        \"edited\": {\"type\": \"string\"},",
+							"        \"url\": {\"type\": \"string\"},",
+							"    }",
+							"};",
+							"pm.test('Body is correct', function() {",
+							"    pm.expect(tv4.validate(data, schema)).to.be.true;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://swapi.dev/api/people/1",
+					"protocol": "https",
+					"host": [
+						"swapi",
+						"dev"
+					],
+					"path": [
+						"api",
+						"people",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
